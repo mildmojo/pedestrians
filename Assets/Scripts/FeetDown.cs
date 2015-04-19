@@ -20,19 +20,13 @@ public class FeetDown : MonoBehaviour {
       // Debug.DrawRay(transform.position, transform.up * 20f, Color.blue);
 
       var feetAxis = transform.position - target.transform.position;
-      // var rot = Quaternion.LookRotation(feetAxis);
       transform.up = Vector3.Lerp(transform.up, feetAxis, 0.5f);
-      // // rot *= _facing;
-      // // rot *= Quaternion.Euler(90,0,0);
-      // // rot *= Quaternion.Euler(0,0,90);
-      // Debug.DrawRay(transform.position, rot * transform.up * 20f);
-      // transform.rotation = Quaternion.Slerp(transform.rotation, rot, 0.5f);
-
     }
   }
 
   void OnLanded() {
     _isActive = false;
+    gameObject.layer = LayerMask.NameToLayer("InactiveCharacter");
   }
 
 }

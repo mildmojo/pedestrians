@@ -6,15 +6,15 @@ using InControl;
 
 public class ButtonLauncher : MonoBehaviour {
   public float launchForce = 200f;
-  public List<GameObject> pedestrians;
 
-  private ShuffleDeck _ammoDeck;
+  private Transform _childTransform;
   private Orbiter _orbiter;
+  private PedestrianManager _pedManager;
 
   // Use this for initialization
   void Start () {
     _orbiter = GetComponent<Orbiter>();
-    _ammoDeck = new ShuffleDeck(pedestrians);
+    _pedManager = PedestrianManager.Instance;
     LoadAmmo();
   }
 
@@ -22,25 +22,31 @@ public class ButtonLauncher : MonoBehaviour {
   void Update () {
     var device = InputManager.ActiveDevice;
     if (device.AnyButton.WasPressed && transform.childCount > 0) {
-      var child = transform.GetChild(0);
-      child.parent = null;
-      var orbiter = GetComponent<Orbiter>();
-      var body = child.gameObject.GetComponent<Rigidbody>();
-      var orbitArm = child.position - orbiter.target.transform.position;
-      var tangent = Vector3.Cross(orbitArm, Vector3.down);
-      body.isKinematic = false;
-      body.AddForce(tangent.normalized * launchForce);
-      Invoke("LoadAmmo", 1f);
+      Launch();
+    }
+
+    if (Input.GetKeyDown(KeyCode.Escape)) {
+      // FadeToBlack.Instance.FadeOut(() => {
+        Application.LoadLevel("menu");
+      //});
     }
   }
 
+  void Launch() {
+    _childTransform.parent = null;
+    var orbiter = GetComponent<Orbiter>();
+    var body = _childTransform.gameObject.GetComponent<Rigidbody>();
+    var orbitArm = _childTransform.position - orbiter.target.transform.position;
+    var tangent = Vector3.Cross(orbitArm, Vector3.down);
+    body.isKinematic = false;
+    gameObject.layer = LayerMask.NameToLayer("Default");
+    body.AddForce(tangent.normalized * launchForce);
+    Invoke("LoadAmmo", 1f);
+  }
+
   void LoadAmmo() {
-    var ammo = Instantiate(_ammoDeck.Draw() as GameObject) as GameObject;
-    ammo.transform.position = transform.position;
-    ammo.transform.parent = transform;
-    var feetDown = ammo.AddComponent<FeetDown>();
-    feetDown.target = _orbiter.target;
-    ammo.GetComponent<Rigidbody>().isKinematic = true;
+    _childTransform = PedestrianManager.Instance.CreatePedestrian(gameObject,
+      transform.position, _orbiter.target).transform;
   }
 
 }
