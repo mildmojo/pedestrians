@@ -51,6 +51,8 @@ public class HudManager : MonoBehaviour {
     AudioFader.Instance.FadeOut(0f);
     if (GameState.IsMuted) {
       muteText.text = "Unmute";
+    } else {
+      muteText.text = "Mute";
       AudioFader.Instance.FadeIn(0.5f);
     }
   }
