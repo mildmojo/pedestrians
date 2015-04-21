@@ -20,5 +20,4 @@ sysinfo.txt
 # Sublime project files
 *.sublime-*
 
-Assets/Audio/**/*.mp3
 
