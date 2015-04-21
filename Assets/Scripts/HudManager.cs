@@ -30,6 +30,9 @@ public class HudManager : MonoBehaviour {
     _baseScoreText = scoreText.text;
     _baseTimerText = timerText.text;
     _audioSource = GetComponent<AudioSource>();
+  }
+
+  void Start() {
     Reset();
   }
 
@@ -39,14 +42,17 @@ public class HudManager : MonoBehaviour {
     UpdateScoreText();
     buttonsHandle.GetComponent<CanvasGroup>().alpha = 0;
     buttonsHandle.SetActive(false);
-  }
 
-  void Start() {
     ScreenFader.Instance.FadeOut(0f);
     ScreenFader.Instance.FadeIn(0.5f, () => {
       GameState.Play();
     });
-    AudioFader.Instance.FadeIn(0.5f);
+
+    AudioFader.Instance.FadeOut(0f);
+    if (GameState.IsMuted) {
+      muteText.text = "Unmute";
+      AudioFader.Instance.FadeIn(0.5f);
+    }
   }
 
   void Update() {
