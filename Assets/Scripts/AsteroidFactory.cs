@@ -4,30 +4,41 @@ using System.Collections;
 public class AsteroidFactory : MonoBehaviour {
   public GameObject asteroidObject;
 
+  public float startDelay;
   public float minSpawnTime;
   public float maxSpawnTime;
 
   public Vector3 minVelocity;
   public Vector3 maxVelocity;
 
-  void Start () {
+  IEnumerator Start () {
     SpawnAsteroid();
+    yield return new WaitForSeconds(startDelay);
+    StartCoroutine(AsteroidSpawner());
   }
 
   void Update () {
 
   }
 
-  void SpawnAsteroid() {
-    var rock = Instantiate(asteroidObject) as GameObject;
-    var body = rock.GetComponent<Rigidbody>();
-    rock.transform.position = transform.position;
+  IEnumerator AsteroidSpawner() {
+    while (true) {
+      yield return new WaitForSeconds(Random.Range(minSpawnTime, maxSpawnTime));
+      SpawnAsteroid();
+    }
+  }
+
+  public GameObject SpawnAsteroid() {
+    var asteroid = Instantiate(asteroidObject) as GameObject;
+    var body = asteroid.GetComponent<Rigidbody>();
+    asteroid.transform.position = transform.position;
     body.velocity = new Vector3(
       Random.Range(minVelocity.x, maxVelocity.x),
       Random.Range(minVelocity.y, maxVelocity.y),
       Random.Range(minVelocity.z, maxVelocity.z)
     );
 Debug.Log(body.velocity);
-    Invoke("SpawnAsteroid", Random.Range(minSpawnTime, maxSpawnTime));
+
+    return asteroid;
   }
 }

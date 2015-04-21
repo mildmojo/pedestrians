@@ -3,15 +3,14 @@ using System.Collections;
 
 public class FeetDown : MonoBehaviour {
   public GameObject target;
+  public bool useChild;
 
-  private Quaternion _facing;
-  private Rigidbody _body;
+  private GameObject _self;
   private bool _isActive;
 
   void Start() {
-    _facing = transform.rotation;
-    _body = GetComponent<Rigidbody>();
     _isActive = true;
+    _self = useChild ? transform.GetChild(0).gameObject : gameObject;
   }
 
   void Update() {
@@ -19,14 +18,19 @@ public class FeetDown : MonoBehaviour {
       // Debug.DrawRay(transform.position, transform.forward * 20f, Color.red);
       // Debug.DrawRay(transform.position, transform.up * 20f, Color.blue);
 
-      var feetAxis = transform.position - target.transform.position;
-      transform.up = Vector3.Lerp(transform.up, feetAxis, 0.5f);
+      var feetAxis = _self.transform.position - target.transform.position;
+      transform.up = Vector3.Lerp(_self.transform.up, feetAxis, 0.5f);
     }
+  }
+
+  void OnTakeoff() {
+    _isActive = false;
+    _self.layer = LayerMask.NameToLayer("Default");
   }
 
   void OnLanded() {
     _isActive = false;
-    gameObject.layer = LayerMask.NameToLayer("InactiveCharacter");
+    _self.layer = LayerMask.NameToLayer("InactiveCharacter");
   }
 
 }

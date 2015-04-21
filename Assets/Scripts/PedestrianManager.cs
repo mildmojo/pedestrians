@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,11 @@ public class PedestrianManager : MonoBehaviour {
   [System.Serializable] public class SpeakerToClips: GenericPair<string, List<AudioClip>> {
     public SpeakerToClips(string key, List<AudioClip> value) : base(key, value) {}
   }
+
+  public RuntimeAnimatorController drillerAnimator;
+  public AudioClip drillRiseSound;
+  public AudioClip drillSlamSound;
+  public AudioMixerGroup fxMixerGroup;
 
   public List<SpeakerToClips> nameAudioAssets;
   public List<GameObject> pedestrianPrefabs;
@@ -38,6 +44,7 @@ public class PedestrianManager : MonoBehaviour {
     _nameDecks = new Dictionary<string, ShuffleDeck>();
     foreach (var speakerPair in nameAudioAssets) {
       var key = speakerPair.key;
+      _speakerDeck.Add(key.Split(new[] {'.'}).First());
       _nameDecks[key] = new ShuffleDeck();
       _namesAudio[key] = new Dictionary<string, AudioClip>();
       foreach (var clip in speakerPair.value) {
@@ -52,6 +59,8 @@ public class PedestrianManager : MonoBehaviour {
 
   public NameClips DrawNameClips() {
     var speakerName = _speakerDeck.Draw() as string;
+Debug.Log(string.Join(" ", _nameDecks.Keys.ToArray()));
+Debug.Log(speakerName + ".first");
     var firstName = _nameDecks[speakerName + ".first"].Draw() as string;
     var lastName = _nameDecks[speakerName + ".last"].Draw() as string;
     var firstClip = _namesAudio[speakerName + ".first"][firstName];
@@ -73,6 +82,21 @@ public class PedestrianManager : MonoBehaviour {
 
     var feetDown = ped.AddComponent<FeetDown>();
     feetDown.target = homeworld;
+
+    ped.AddComponent<FlyLikeSuperhero>();
+
+    var animator = ped.AddComponent<Animator>();
+    animator.enabled = false;
+    animator.runtimeAnimatorController = drillerAnimator;
+
+    var driller = ped.AddComponent<Driller>();
+    driller.slamClip = drillSlamSound;
+    driller.riseClip = drillRiseSound;
+
+    ped.GetComponent<AudioSource>().outputAudioMixerGroup = fxMixerGroup;
+
+    // var yeller = ped.AddComponent<Yeller>();
+    // yeller.nameClips = DrawNameClips();
 
     return ped;
   }

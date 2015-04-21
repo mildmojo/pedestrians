@@ -32,21 +32,23 @@ public class ButtonLauncher : MonoBehaviour {
     }
   }
 
+  void LoadAmmo() {
+    // Lock & load.
+    var ped = _pedManager.CreatePedestrian(gameObject, transform.position, _orbiter.target);
+    _childTransform = ped.transform;
+  }
+
   void Launch() {
     _childTransform.parent = null;
     var orbiter = GetComponent<Orbiter>();
     var body = _childTransform.gameObject.GetComponent<Rigidbody>();
     var orbitArm = _childTransform.position - orbiter.target.transform.position;
-    var tangent = Vector3.Cross(orbitArm, Vector3.down);
     body.isKinematic = false;
-    gameObject.layer = LayerMask.NameToLayer("Default");
-    body.AddForce(tangent.normalized * launchForce);
+    _childTransform.SendMessage("OnTakeoff");
+    // var tangent = Vector3.Cross(orbitArm, Vector3.down);
+    // body.AddForce(tangent.normalized * launchForce);
+    body.AddForce(orbitArm.normalized * launchForce);
     Invoke("LoadAmmo", 1f);
-  }
-
-  void LoadAmmo() {
-    _childTransform = PedestrianManager.Instance.CreatePedestrian(gameObject,
-      transform.position, _orbiter.target).transform;
   }
 
 }
