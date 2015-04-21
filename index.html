@@ -16,6 +16,97 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+        <script type='text/javascript' src='https://ssl-webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/jquery.min.js'></script>
+        <script type="text/javascript">
+        <!--
+            var unityObjectUrl = "http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js";
+            if (document.location.protocol == 'https:')
+                unityObjectUrl = unityObjectUrl.replace("http://", "https://ssl-");
+            document.write('<script type="text\/javascript" src="' + unityObjectUrl + '"><\/script>');
+        -->
+        </script>
+        <script type="text/javascript">
+        <!--
+            var config = {
+                width: 848,
+                height: 480,
+                params: { enableDebugging:"0" }
+
+            };
+            var u = new UnityObject2(config);
+
+            jQuery(function() {
+
+                var $missingScreen = jQuery("#unityPlayer").find(".missing");
+                var $brokenScreen = jQuery("#unityPlayer").find(".broken");
+                $missingScreen.hide();
+                $brokenScreen.hide();
+
+                u.observeProgress(function (progress) {
+                    switch(progress.pluginStatus) {
+                        case "broken":
+                            $brokenScreen.find("a").click(function (e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                u.installPlugin();
+                                return false;
+                            });
+                            $brokenScreen.show();
+                        break;
+                        case "missing":
+                            $missingScreen.find("a").click(function (e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                u.installPlugin();
+                                return false;
+                            });
+                            $missingScreen.show();
+                        break;
+                        case "installed":
+                            $missingScreen.remove();
+                        break;
+                        case "first":
+                        break;
+                    }
+                });
+                u.initPlugin(jQuery("#unityPlayer")[0], "pedestrian_mining_corps-webplayer.unity3d");
+            });
+        -->
+        </script>
+        <style type="text/css">
+        <!--
+            div.unity-content {
+                margin: auto;
+                width: 848px;
+            }
+            div.broken,
+            div.missing {
+                margin: auto;
+                position: relative;
+                top: 50%;
+                width: 193px;
+            }
+            div.broken a,
+            div.missing a {
+                height: 63px;
+                position: relative;
+                top: -31px;
+            }
+            div.broken img,
+            div.missing img {
+                border-width: 0px;
+            }
+            div.broken {
+                display: none;
+            }
+            div#unityPlayer {
+                cursor: default;
+                height: 480px;
+                width: 848px;
+            }
+        -->
+        </style>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -35,15 +126,31 @@
             </header>
         </div>
 
-        <a name="play">
-        <!-- Unity player goes here. -->
+
 
         <div class="main-container">
             <div class="main wrapper clearfix">
 
+                <a name="play">
+                <article>
+                <div class="unity-content">
+                    <div id="unityPlayer">
+                        <div class="missing">
+                            <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+                                <img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+                            </a>
+                        </div>
+                        <div class="broken">
+                            <a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now! Restart your browser after install.">
+                                <img alt="Unity Web Player. Install now! Restart your browser after install." src="http://webplayer.unity3d.com/installation/getunityrestart.png" width="193" height="63" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                </article>
+
                 <article>
                     <header>
-                        <img src="media/screenshot.png" style="width: 100%">
                         <h2>Pedestrian Mining Corps: Baby Earth Needs Asteroids</h2>
                         <p>
                             Baby Earth is small. Baby Earth needs asteroids to
@@ -83,9 +190,9 @@
                         <a name="download">
                         <h2>Downloads</h2>
                         <ul style="list-decoration: none">
-                            <li><a class="download" href="pedestrian_mining_corps-linux-1.1.zip">Linux</a></li>
-                            <li><a class="download" href="pedestrian_mining_corps-mac-1.1.zip">Mac</a></li>
-                            <li><a class="download" href="pedestrian_mining_corps-win-1.1.zip">Windows</a></li>
+                            <li><a class="download" href="pedestrian_mining_corps-linux-1.2.zip">Linux</a></li>
+                            <li><a class="download" href="pedestrian_mining_corps-mac-1.2.zip">Mac</a></li>
+                            <li><a class="download" href="pedestrian_mining_corps-win-1.2.zip">Windows</a></li>
                             <li><a class="download" href="https://github.com/mildmojo/pedestrians">Source</a></li>
                         </ul>
                     </section>
@@ -100,6 +207,8 @@
                             <li>Additional sound: <a href="http://www.sonniss.com/sound-effects/free-download-game-audio/">Sonniss sound effects library</a> (Thank you, Sonniss!!)</li>
                     </footer>
                 </article>
+
+                <aside><a href="media/screenshot.png" title="Screenshot" alt="Screenshot of the game in action"><img src="media/screenshot.png" style="width: 100%"></a></aside>
 
                 <!--
                 <aside>
