@@ -25,11 +25,16 @@ public class MenuManager : MonoBehaviour {
   }
 
   public void OnQuitClick() {
-    #if !UNITY_WEBPLAYER && !UNITY_WEBGJ
-      ScreenFader.Instance.FadeOut(0.5f, () => {
-        Application.Quit();
-      });
+    #if UNITY_WEBPLAYER
+      return;
     #endif
+    #if UNITY_WEBGL
+      return;
+    #endif
+
+    ScreenFader.Instance.FadeOut(0.5f, () => {
+      Application.Quit();
+    });
   }
 
   void Load(string levelName) {

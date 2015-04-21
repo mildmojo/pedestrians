@@ -33,6 +33,7 @@ public class GravityField : MonoBehaviour {
     _bodies = _bodies.Aggregate(new List<Rigidbody>(), (sum, body) => {
       // Sometimes characters get swallowed by other asteroids.
       if (!body) return sum;
+      if (body.transform.parent != null) return sum;
 
       var distVector = transform.position - body.transform.position;
 

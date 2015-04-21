@@ -14,11 +14,13 @@ public class HudManager : MonoBehaviour {
   public GameObject buttonsHandle;
   public AudioMixer mixer;
   public AudioClip gameOverSound;
+  public AudioClip countdownBeep;
 
   [HideInInspector] [System.NonSerialized]
   public int score;
 
   private float _timer;
+  private float _roundedTimer;
   private string _baseScoreText;
   private string _baseTimerText;
   private AudioSource _audioSource;
@@ -58,8 +60,11 @@ public class HudManager : MonoBehaviour {
 
     if (_timer <= 0) {
       GameOver();
+    } else if (_timer < 10f && _roundedTimer != Mathf.Ceil(_timer)) {
+      _audioSource.PlayOneShot(countdownBeep);
     }
 
+    _roundedTimer = Mathf.Ceil(_timer);
     UpdateTimerText();
   }
 
@@ -75,7 +80,7 @@ public class HudManager : MonoBehaviour {
   }
 
   void UpdateTimerText() {
-    timerText.text = _baseTimerText + Mathf.Ceil(_timer);
+    timerText.text = _baseTimerText + _roundedTimer;
   }
 
   public void OnBackButton() {
@@ -142,7 +147,7 @@ public class HudManager : MonoBehaviour {
       var scoreMsgs = new string[] {
         "\n\nPREVIOUS BEST: ",
         _best.ToString(),
-        score > _best ? "\n\nFINE WORK, PEDESTRIAN" : "\n\nYOU CAN DO BETTER, PEDESTRIAN"
+        score > _best ? "\n\nFINE WORK, PEDESTRIAN" : score == _best ? "\n\nSUCH CONSISTENCY, PEDESTRIAN!" : "\n\nYOU CAN DO BETTER, PEDESTRIAN"
       };
       StartCoroutine(DrawScoreText(scoreMsgs));
     });

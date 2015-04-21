@@ -91,7 +91,7 @@ Debug.Log(speakerName + ".first");
 
     var driller = ped.AddComponent<Driller>();
     driller.slamClip = drillSlamSound;
-    driller.riseClip = drillRiseSound;
+    // driller.riseClip = drillRiseSound;
 
     ped.GetComponent<AudioSource>().outputAudioMixerGroup = fxMixerGroup;
 

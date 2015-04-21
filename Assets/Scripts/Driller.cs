@@ -41,7 +41,8 @@ public class Driller : MonoBehaviour {
   // Broadcast by character collision with asteroid.
   public void OnLanded() {
     LeanTween.delayedCall(1f, () => {
-      _animator.enabled = true;
+      if (_animator)
+        _animator.enabled = true;
     });
   }
 }
