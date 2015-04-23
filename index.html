@@ -250,7 +250,10 @@
         <script>
             $('a.download').each(function(idx, link) {
                 $(link).click(function() {
-                    gaq.trackPageview(href);
+                    ga('send', 'pageview', {
+                        page: $(link).attr('href'),
+                        title: 'Download - ' + $(link).text()
+                    });
                 });
             });
         </script>
