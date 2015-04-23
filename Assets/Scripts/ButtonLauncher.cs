@@ -21,7 +21,7 @@ public class ButtonLauncher : MonoBehaviour {
   // Update is called once per frame
   void Update () {
     var device = InputManager.ActiveDevice;
-    if (device.AnyButton.WasPressed && transform.childCount > 0) {
+    if ((device.AnyButton.WasPressed || Input.GetMouseButtonDown(0)) && transform.childCount > 0) {
       Launch();
     }
 
